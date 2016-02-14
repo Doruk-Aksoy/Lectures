@@ -3,10 +3,10 @@
 #include <time.h>
 
 struct ARR_T {
-	unsigned int nextpos;
+	unsigned int lastpos;
+	int	lastelem;
 	unsigned int capacity;
 	unsigned int size;
-	unsigned int checkprev;
 	int* elems;
 };
 
@@ -17,7 +17,7 @@ void* s_malloc(const uint);
 void s_free(void*);
 
 arr_t* create_array(uint);
-void add_element(arr_t*, int);
+void add_element(arr_t*, int, uint);
 void set_next_pos(arr_t*);
 void update_check_signal(arr_t*);
 void display_array(arr_t*);
@@ -47,8 +47,7 @@ arr_t* create_array(uint N) {
 		x->elems = (int*) s_malloc(sizeof(int) * N);			// allocate the array itself
 		for(uint i = 0; i < N; ++i)								// initialize all array elements to NULL
 			x->elems[i] = 0; 									// suppose our 'NULL' element is 0.
-		x->nextpos = 0;											// set current nextpos to beginning
-		x->checkprev = 0;										// no signal to check all previous points for possible insertion point
+		x->lastpos = 0;											// set current nextpos to beginning
 		x->capacity = N;										// our array capacity (fixed)
 		x->size = 0;											// our array size
 		return x;
@@ -56,32 +55,13 @@ arr_t* create_array(uint N) {
 	return NULL;
 }
 
-void add_element(arr_t* arr, int elem) {
-	if(arr->size != arr->capacity) {							// if we can add, do add
-		arr->elems[arr->nextpos] = elem;
+void add_element(arr_t* arr, int elem, uint pos) {
+	if(arr->size != arr->capacity && pos < arr->capacity && !arr->elems[pos]) {
+		arr->elems[pos] = elem;
+		arr->lastelem = elem;
+		arr->lastpos = pos;
 		++arr->size;
-		set_next_pos(arr);										// update the nextpos
-		update_check_signal(arr);								// update the check signal
 	}
-}
-
-void set_next_pos(arr_t* arr) {
-	if(!arr->checkprev)											// if we don't have to check previous points
-		++arr->nextpos;											// update to next
-	else {														// there was some deletion involved, we must check all points
-		for(uint i = 0; i < arr->nextpos; ++i)
-			if(!arr->elems[i]) {								// 'NULL' element reached (our 0), use this point
-				arr->nextpos = i;
-				break;
-			}
-	}
-}
-
-void update_check_signal(arr_t* arr) {							// go through all elements, up to arr->size
-	for(uint i = 0; i < arr->size; ++i)
-		if(!arr->elems[i])										// if you find a 'NULL' element in between, must keep the check
-			return;
-	arr->checkprev = 0;											// no 'NULL' found, we can proceed with insertion to nextpos++
 }
 
 void delete_element(arr_t* arr, uint pos) {
@@ -89,7 +69,14 @@ void delete_element(arr_t* arr, uint pos) {
 		return;
 	arr->elems[pos] = 0;										// set it to our 'NULL'
 	--arr->size;												// decrease size
-	arr->checkprev = 1;											// our array order is gone, check all points till it's fixed
+	if(!pos) {
+		arr->lastpos = 0;
+		arr->lastelem = arr->elems[0];
+	}
+	else {
+		arr->lastpos = pos - 1;
+		arr->lastelem = arr->elems[arr->lastpos];
+	}
 }
 
 void display_array(arr_t* arr) {
@@ -108,7 +95,7 @@ int main() {
 	uint s = 10;
 	arr_t* A = create_array(s);
 	for(uint i = 0; i < s; ++i)
-		add_element(A, (rand() % 100) + 1);
+		add_element(A, (rand() % 100) + 1, i);
 	display_array(A);
 	int input = 0;
 	do {
@@ -117,7 +104,11 @@ int main() {
 		if(input == -1)
 			break;
 		delete_element(A, input);
+		printf("Last element: %d\n", A->lastelem);
 		display_array(A);
 	} while(input != -1);
+	add_element(A, 1337, 6);
+	add_element(A, 2456, 7);
+	display_array(A);
 	return 0;
 }
