@@ -81,7 +81,7 @@ void delete_element(list* l, int elem) {
 			printf("Element %d was not in the list.\n", elem);
 		else {
 			node* del = temp->next;
-			temp->next = temp->next->next;
+			temp->next = del->next;
 			free(del);
 			--l->size;
 		}
