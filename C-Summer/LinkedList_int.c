@@ -12,7 +12,7 @@ typedef struct linked_list node;
 struct linked_list_record {
 	node* head;
 	node* tail;
-	int size;
+	unsigned int size;
 };
 
 typedef struct linked_list_record list;
