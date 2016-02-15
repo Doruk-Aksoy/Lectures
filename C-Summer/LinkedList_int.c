@@ -69,7 +69,6 @@ void add_element(list* l, int elem, uint pos) {
 			temp = temp->next;
 		add->next = temp->next;
 		temp->next = add;
-		l->tail = add;
 	}
 	++l->size;
 }
