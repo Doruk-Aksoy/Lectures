@@ -21,13 +21,14 @@ struct Deque {
 
 typedef struct Deque deque;
 
-deque* create_deque();
+deque* create_deque(int (*priority)(int, int));
 void push_front(deque*, int);
 void push_back(deque*, int);
 void pop_front(deque*);
 void pop_back(deque*);
 node* front(deque*);
 node* back(deque*);
+void reorder_deque(deque*);
 
 void* s_malloc (const uint t) {
 	void* p = malloc(t);
@@ -47,11 +48,12 @@ void s_free (void* p) {
 		free(p);
 }
 
-deque* create_deque() {													// we declare our priority function here
+deque* create_deque(int (*priority)(int, int)) {		// we declare our priority function here
 	deque* d = (deque*) s_malloc(sizeof(deque));
 	d->begin = (node*) s_malloc(sizeof(node));
 	d->end = d->begin;
 	d->begin->next = NULL;
+	d->ord = priority;
 	d->size = 0;
 	return d;
 }
@@ -110,6 +112,31 @@ node* back(deque* d) {
 	return d->end;
 }
 
+int int_cmp(int x, int y) {
+	return x >= y;
+}
+
+void swap(int* x, int* y) {
+	int temp = *x;
+	*x = *y;
+	*y = temp;
+}
+
+// if somebody wants their deque sorted according a sorting method, they can provide their own comparison during the creation of the deque
+// if we really want a different sorting method, we can add a new function that allows changing of the function pointer anyway!
+void reorder_deque(deque* d) {
+	if(d->ord) {
+		// we will use a sorting algorithm named 'Bubble Sort' here. We will go into details of how it works later.
+		// There are many better algorithms out there, but we will cover them later, again.
+		for(node* t1 = d->begin->next; t1; t1 = t1->next) {
+			for(node* t2 = t1->next; t2; t2 = t2->next) {
+				if(d->ord(t1->data, t2->data))
+					swap(&t1->data, &t2->data);
+			}
+		}
+	}
+}
+
 void display_deque(deque* d) {
 	printf("Front and back of the queue: %d and %d\n", front(d)->data, back(d)->data);
 	printf("Deque content in normal order:\n");
@@ -140,15 +167,17 @@ void free_deque_back(deque* d) {
 
 int main() {
 	srand(time(NULL));
-	deque* d1 = create_deque();
+	deque* d1 = create_deque(int_cmp);
 	for(uint i = 0; i < 10; ++i)
 		push_back(d1, (rand() % 100) + 1);
 	display_deque(d1);
 	printf("\n\nDeque 2 with pushfront\n\n");
-	deque* d2 = create_deque();
+	deque* d2 = create_deque(int_cmp);
 	for(uint i = 0; i < 10; ++i)
 		push_front(d2, (rand() % 100) + 1);
 	display_deque(d2);
+	reorder_deque(d1);
+	display_deque(d1);
 	free_deque_front(d1);
 	free_deque_back(d2);
 	return 0;
