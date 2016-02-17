@@ -49,6 +49,7 @@ node* create_bst(int data) {
 	node* tree = (node*) s_malloc(sizeof(node));
 	tree->left = tree->right = NULL;
 	tree->data = data;
+	tree->dup_count = 0;
 	return tree;
 }
 
