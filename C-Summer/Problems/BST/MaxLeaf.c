@@ -182,13 +182,5 @@ int main() {
 	}
 	display_tree(tree);
 	printf("Largest leaf node value: %d\n", largest_leaf(tree)->data);
-	int input;
-	do {
-		printf("Enter value to delete: ");
-		scanf("%d", &input);
-		delete_elem(&tree, input);
-		display_tree(tree);
-	} while(input != -1);
-	
 	return 0;
 }
