@@ -180,17 +180,7 @@ int main() {
 	}
 	insert(&tree, 1337);
 	display_tree(tree);
-	printf("Largest leaf node value: %d\n", largest_leaf(tree)->data);
 	node* test = search(tree, 1337);
 	printf("Grandparent of 1337 is: %d", get_grandparent(tree, test)->data);
-	/*
-	int input;
-	do {
-		printf("Enter value to delete: ");
-		scanf("%d", &input);
-		delete_elem(&tree, input);
-		display_tree(tree);
-	} while(input != -1);
-	*/
 	return 0;
 }
