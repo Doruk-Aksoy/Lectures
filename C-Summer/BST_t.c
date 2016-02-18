@@ -124,10 +124,9 @@ node* search(node* t, void* val, int (*cmpfunc)(void*, void*)) {
 		return NULL;
 	if(cmpfunc(t->data, val) == 1)
 		return t;
-	if(cmpfunc(t->data, val) < 0)
+	else if(cmpfunc(t->data, val) < 0)
 		return search(t->right, val, cmpfunc);
-	else
-		return search(t->left, val, cmpfunc);
+	return search(t->left, val, cmpfunc);
 }
 
 node* get_parent(node* t, node* s, int (*cmpfunc)(void*, void*)) {
