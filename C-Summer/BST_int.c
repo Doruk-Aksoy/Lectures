@@ -106,10 +106,9 @@ node* search(node* t, int val) {
 		return NULL;
 	if(t->data == val)
 		return t;
-	if(t->data < val)
+	else if(t->data < val)
 		return search(t->right, val);
-	else
-		return search(t->left, val);
+	return search(t->left, val);
 }
 
 node* get_parent(node* t, node* s) {
