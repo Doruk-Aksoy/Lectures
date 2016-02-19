@@ -292,11 +292,13 @@ int main() {
 	srand(time(NULL));
 	node* tree = create_bst(rand() % 15 + 1);
 	for(uint i = 0; i < 14; ++i) {
-		int elem;
+		/*
 		// create unique elements from 1 to 15.
 		do {
 			elem = rand() % 15 + 1;
 		} while (search(tree, elem));
+		*/
+		int elem = rand() % 15 + 1;
 		insert(&tree, elem);
 	}
 	display_tree(tree);
