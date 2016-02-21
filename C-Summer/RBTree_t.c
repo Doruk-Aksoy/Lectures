@@ -545,7 +545,7 @@ int main() {
 	for(uint i = 0; i < 15; ++i) {
 		int* key = (int *) s_malloc(sizeof(int));
 		*key = rand() % 1000 + 1;
-		char* str = strdup(test_names[rand() % 15]);
+		char* str = test_names[rand() % 15];
 		rbtree_insert(tree, key, str);
 	}
 	show_tree(tree);
