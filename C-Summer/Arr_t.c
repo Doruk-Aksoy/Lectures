@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 
 struct ARR_T {
 	unsigned int lastpos;
@@ -45,7 +46,7 @@ void s_free (void* p) {
 arr_t* create_array(uint N, uint elemsize) {
 	if(N) {
 		arr_t* x = (arr_t*) s_malloc(sizeof(arr_t));					// allocate the array struct ptr
-		x->elems = s_malloc(sizeof(void*) * N);							// allocate the array itself
+		x->elems = (void **) s_malloc(sizeof(void*) * N);							// allocate the array itself
 		for(uint i = 0; i < N; ++i) {									// initialize all array elements to NULL
 			x->elems[i] = s_malloc(sizeof(char) * elemsize);
 			x->elems[i] = NULL; 										// now this is needed
